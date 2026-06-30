@@ -1,0 +1,51 @@
+# Knowledge Base Generator 配置
+# 由 /kb:init 自动生成，可手动编辑
+
+# ===== 分层策略 =====
+strategy:
+  # 边界识别方式：auto | manual | hybrid
+  mode: hybrid
+
+# ===== 扫描配置 =====
+scan:
+  # 排除目录
+  exclude:
+    - node_modules
+    - .git
+    - dist
+    - build
+    - __pycache__
+    - .next
+    - target
+
+# ===== 设计文档映射 =====
+design_docs:
+  # 自动扫描路径
+  scan_paths:
+    - docs/superpowers/specs/
+    - docs/superpowers/plans/
+    - docs/
+    - README.md
+
+# ===== 更新策略 =====
+update:
+  # 触发方式：finishing | hook | manual
+  trigger: finishing
+  # trigger=hook 时的 hook 类型：pre-commit | post-merge
+  hook_type: post-merge
+  # 是否自动提交 kb 更新
+  auto_commit: true
+
+# ===== 模板配置 =====
+templates:
+  # 模板目录（相对于项目根目录）
+  path: .knowledge-base/templates/
+  # 使用的模板集：default | custom
+  use: default
+
+# ===== 输出配置 =====
+output:
+  # 知识库产物目录
+  kb_dir: docs/kb/
+  # 索引 skill 目录
+  skill_dir: skills/knowledge-base/
