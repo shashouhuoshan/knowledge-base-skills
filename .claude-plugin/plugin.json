@@ -6,11 +6,11 @@
     "name": "Knowledge Base Plugin"
   },
   "commands": [
-    "./.claude/commands/kb-init.md",
-    "./.claude/commands/kb-generate.md",
-    "./.claude/commands/kb-status.md"
+    ".claude/commands/kb-init.md",
+    ".claude/commands/kb-generate.md",
+    ".claude/commands/kb-status.md"
   ],
   "skills": [
-    "./skills/knowledge-base-generator/SKILL.md"
+    "skills/knowledge-base-generator/SKILL.md"
   ]
 }

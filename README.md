@@ -14,13 +14,13 @@
 
 ## 快速开始
 
-### 在线安装
+### 在线安装（需要合并到 main 后可用）
 
 ```bash
 claude plugins install knowledge-base-generator@github:shashouhuoshan/knowledge-base-skills
 ```
 
-或在 `~/.claude/settings.json` 中配置：
+或在 `~/.claude/settings.json` 的 `enabledPlugins` 中添加：
 
 ```json
 {
@@ -30,25 +30,27 @@ claude plugins install knowledge-base-generator@github:shashouhuoshan/knowledge-
 }
 ```
 
+安装后运行 `/reload-plugins`，输入 `/kb-` 即可看到三个命令。
+
 ### 离线安装
 
-将以下两个目录复制到目标机器的 `~/.claude/` 下：
+将仓库的 `.claude/commands/` 和 `skills/` 复制到 `~/.claude/` 下：
 
-```
-~/.claude/
-├── commands/
-│   ├── kb-init.md
-│   ├── kb-generate.md
-│   └── kb-status.md
-└── skills/
-    └── knowledge-base-generator/
-        ├── SKILL.md
-        ├── config/
-        ├── prompts/
-        └── templates/
+```bash
+# 从已 clone 的仓库复制
+cp -r <repo>/.claude/commands/kb-*.md ~/.claude/commands/
+cp -r <repo>/skills/knowledge-base-generator ~/.claude/skills/
 ```
 
-运行 `/reload-plugins` 刷新即可。
+运行 `/reload-plugins` 即可。
+
+### 从源码安装（开发模式）
+
+```bash
+git clone https://github.com/shashouhuoshan/knowledge-base-skills.git
+cd knowledge-base-skills
+# 项目本身即插件，在 Claude Code 中打开即可使用
+```
 
 ## 命令
 
