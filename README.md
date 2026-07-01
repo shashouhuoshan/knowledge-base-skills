@@ -12,32 +12,47 @@
 - **SDD 深度集成**：知识库作为 brainstorming → writing-plans → subagent-driven-dev → finishing 全流程的共享上下文
 - **零依赖**：纯 Markdown + YAML，无需编程语言运行时
 
-## 快速开始
+## 安装
 
-### 在线安装（需要合并到 main 后可用）
+### 通过 Plugin Marketplace 安装（推荐）
 
 ```bash
-claude plugins install knowledge-base-generator@github:shashouhuoshan/knowledge-base-skills
+# 1. 添加插件市场
+/plugin marketplace add shashouhuoshan/knowledge-base-skills
+
+# 2. 安装插件
+/plugin install knowledge-base-generator@knowledge-base-skills
 ```
 
-或在 `~/.claude/settings.json` 的 `enabledPlugins` 中添加：
+安装后运行 `/reload-plugins`，输入 `/kb-` 即可看到三个命令。
+
+### 通过 settings.json 安装
+
+在 `~/.claude/settings.json` 中配置：
 
 ```json
 {
+  "extraKnownMarketplaces": {
+    "knowledge-base-skills": {
+      "source": {
+        "source": "github",
+        "repo": "shashouhuoshan/knowledge-base-skills"
+      }
+    }
+  },
   "enabledPlugins": {
-    "knowledge-base-generator@github:shashouhuoshan/knowledge-base-skills": true
+    "knowledge-base-generator@knowledge-base-skills": true
   }
 }
 ```
 
-安装后运行 `/reload-plugins`，输入 `/kb-` 即可看到三个命令。
+配置后运行 `/reload-plugins` 即可。
 
 ### 离线安装
 
 将仓库的 `.claude/commands/` 和 `skills/` 复制到 `~/.claude/` 下：
 
 ```bash
-# 从已 clone 的仓库复制
 cp -r <repo>/.claude/commands/kb-*.md ~/.claude/commands/
 cp -r <repo>/skills/knowledge-base-generator ~/.claude/skills/
 ```
