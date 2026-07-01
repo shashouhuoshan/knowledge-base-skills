@@ -1,0 +1,16 @@
+{
+  "name": "knowledge-base-generator",
+  "version": "1.0.0",
+  "description": "为项目生成三层结构化代码知识库（系统 → 子系统 → 模块），结合 Superpowers SDD 模式，在 finishing 阶段自动增量更新。",
+  "author": {
+    "name": "Knowledge Base Plugin"
+  },
+  "commands": [
+    ".claude/commands/kb-init.md",
+    ".claude/commands/kb-generate.md",
+    ".claude/commands/kb-status.md"
+  ],
+  "skills": [
+    "skills/knowledge-base-generator/SKILL.md"
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: knowledge-base-generator
-description: Use when generating structured code knowledge bases for projects, when running /kb:init, /kb:generate, or /kb:status commands, or when integrating knowledge base updates into SDD workflows
+description: Use when generating structured code knowledge bases for projects, when running /kb-init, /kb-generate, or /kb-status commands, or when integrating knowledge base updates into SDD workflows
 ---
 
 # Knowledge Base Generator
@@ -11,9 +11,9 @@ description: Use when generating structured code knowledge bases for projects, w
 
 | 命令 | 用途 |
 |------|------|
-| `/kb:init` | 初始化项目配置、目录结构和默认模板 |
-| `/kb:generate [--update]` | 全量生成 / 增量更新知识库 |
-| `/kb:status` | 查看知识库覆盖率和过期状态 |
+| `/kb-init` | 初始化项目配置、目录结构和默认模板 |
+| `/kb-generate [--update]` | 全量生成 / 增量更新知识库 |
+| `/kb-status` | 查看知识库覆盖率和过期状态 |
 
 ## 前置条件
 
@@ -22,7 +22,7 @@ description: Use when generating structured code knowledge bases for projects, w
 
 ---
 
-## /kb:init — 项目初始化
+## /kb-init — 项目初始化
 
 ### 流程
 
@@ -57,19 +57,19 @@ description: Use when needing to understand project architecture, module interfa
 
 # 项目知识库
 
-本知识库由 knowledge-base-generator 管理。运行 `/kb:generate` 生成完整内容。
+本知识库由 knowledge-base-generator 管理。运行 `/kb-generate` 生成完整内容。
 
 ## 系统
 
-（待生成 — 运行 `/kb:generate`）
+（待生成 — 运行 `/kb-generate`）
 
 ## 子系统
 
-（待生成 — 运行 `/kb:generate`）
+（待生成 — 运行 `/kb-generate`）
 
 ## 模块
 
-（待生成 — 运行 `/kb:generate`）
+（待生成 — 运行 `/kb-generate`）
 ```
 
 6. 输出初始化报告：
@@ -85,16 +85,16 @@ description: Use when needing to understand project architecture, module interfa
   skills/knowledge-base/SKILL.md       — 索引 Skill（空骨架）
   docs/kb/                             — 知识库产物目录
 
-下一步：运行 /kb:generate 开始生成知识库
+下一步：运行 /kb-generate 开始生成知识库
 ```
 
 ---
 
-## /kb:generate — 知识库生成
+## /kb-generate — 知识库生成
 
 ### 模式判断
 
-1. 检查 `.knowledge-base/config.yaml` 是否存在 → 不存在则提示先运行 `/kb:init`
+1. 检查 `.knowledge-base/config.yaml` 是否存在 → 不存在则提示先运行 `/kb-init`
 2. 检查 `--update` 标志：
    - 无标志 → **全量生成模式**
    - 有标志 → **增量更新模式**
@@ -195,7 +195,7 @@ description: Use when needing to understand project architecture, module interfa
   - module/middleware
 ```
 
-### 增量更新流程（`/kb:generate --update`）
+### 增量更新流程（`/kb-generate --update`）
 
 #### 1. 检测变更
 
@@ -230,12 +230,12 @@ description: Use when needing to understand project architecture, module interfa
 
 ---
 
-## /kb:status — 状态检查
+## /kb-status — 状态检查
 
 ### 流程
 
 1. 读取 `docs/kb/.manifest.yaml`
-   - 不存在 → 报告"知识库未生成，请运行 /kb:generate"
+   - 不存在 → 报告"知识库未生成，请运行 /kb-generate"
 
 2. 检测变更：
    - Git 模式：`git diff --name-only <last_commit> HEAD`
@@ -259,7 +259,7 @@ description: Use when needing to understand project architecture, module interfa
   - module/jwt-service — 源文件已变更（src/auth/jwt.ts）
   - module/user-repository — 父级子系统过期
 
-建议：运行 /kb:generate --update 更新过期条目
+建议：运行 /kb-generate --update 更新过期条目
 ```
 
 ---
@@ -308,7 +308,7 @@ Agent 主动查询相关知识库条目，获取接口签名和依赖关系。
 编排 Agent 在 Dispatch 实现子 Agent 时，附带相关模块的知识库条目内容。
 
 ### finishing 阶段
-自动执行 `/kb:generate --update`：
+自动执行 `/kb-generate --update`：
 1. `git diff main..HEAD` 确定变更范围
 2. 更新受影响的条目
 3. `git add docs/kb/ skills/knowledge-base/`

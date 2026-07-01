@@ -3,5 +3,8 @@
     "allow": [
       "Read(//d/CodeSpace/**)"
     ]
+  },
+  "skillOverrides": {
+    "knowledge-base-generator": "user-invocable-only"
   }
 }
