@@ -1,0 +1,22 @@
+{
+  "name": "knowledge-base-skills",
+  "owner": {
+    "name": "Knowledge Base Plugin"
+  },
+  "metadata": {
+    "description": "Code knowledge base generator plugin for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "knowledge-base-generator",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/shashouhuoshan/knowledge-base-skills.git"
+      },
+      "description": "为项目生成三层结构化代码知识库（系统 → 子系统 → 模块），结合 Superpowers SDD 模式，在 finishing 阶段自动增量更新。",
+      "version": "1.0.0",
+      "strict": true
+    }
+  ]
+}
