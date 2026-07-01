@@ -195,16 +195,10 @@ skills/knowledge-base-generator/
 ├── SKILL.md                       # 主编排 Skill（流程定义）
 ├── config/
 │   └── default-config.yaml        # 默认配置模板
-├── templates/                     # 默认知识库条目模板
-│   ├── system.md
-│   ├── subsystem.md
-│   └── module.md
-└── prompts/                       # 提示词参考（agents/ 的来源）
-    ├── recognition-agent.md
-    ├── system-agent.md
-    ├── subsystem-agent.md
-    ├── module-agent.md
-    └── index-agent.md
+└── templates/                     # 默认知识库条目模板
+    ├── system.md
+    ├── subsystem.md
+    └── module.md
 ```
 
 ### Subagent 架构

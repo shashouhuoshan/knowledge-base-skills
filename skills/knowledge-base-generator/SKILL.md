@@ -105,9 +105,10 @@ description: Use when needing to understand project architecture, module interfa
 
 **调度识别 Agent：**
 
-读取 `prompts/recognition-agent.md` 作为 Subagent 系统提示词。
+通过 Task 工具派发 `kb-recognition-agent` 子 agent（subagent_type: `kb-recognition-agent`）。该 agent 的行为定义在 `agents/recognition-agent.md`，由 Claude Code 自动注入为系统提示词。
 
 向识别 Agent 提供：
+- 项目根目录路径
 - 项目目录树（`ls -R` 或 `tree`，排除 scan.exclude 中的目录）
 - 依赖文件内容（自动发现并读取 package.json / go.mod / Cargo.toml / requirements.txt 等）
 - 设计文档（按三级发现策略搜索并读取）
@@ -143,22 +144,21 @@ description: Use when needing to understand project architecture, module interfa
 
 #### 阶段 2：并行生成
 
-**并行调度生成 Agent（无依赖关系，全部并行）：**
+**并行调度生成 Agent（无依赖关系，全部并行，通过 Task 工具派发）：**
 
-1. **系统级 Agent × 1**：
-   - 提示词：`prompts/system-agent.md`
-   - 输入：分层树系统节点 + 系统级设计文档 + 模板
+1. **kb-system-agent × 1**（subagent_type: `kb-system-agent`）：
+   - 输入：项目根目录 + 分层树系统节点 + 系统级设计文档 + 模板路径
    - 输出文件：`docs/kb/system/<系统名>.md`
 
-2. **子系统 Agent × N**（并行）：
-   - 提示词：`prompts/subsystem-agent.md`
-   - 输入：各自的子系统节点 + 代码目录 + 设计文档 + 模板
+2. **kb-subsystem-agent × N**（并行，subagent_type: `kb-subsystem-agent`）：
+   - 输入：项目根目录 + 各自的子系统节点 + 代码目录 + 设计文档 + 模板路径
    - 输出文件：`docs/kb/subsystem/<子系统名>.md`
 
-3. **模块 Agent × M**（并行）：
-   - 提示词：`prompts/module-agent.md`
-   - 输入：各自的模块节点 + 源代码文件 + 设计文档 + 模板
+3. **kb-module-agent × M**（并行，subagent_type: `kb-module-agent`）：
+   - 输入：项目根目录 + 各自的模块节点 + 源代码文件 + 设计文档 + 模板路径
    - 输出文件：`docs/kb/module/<模块名>.md`
+
+各 agent 的行为定义在 `agents/<role>-agent.md`，由 Claude Code 自动注入。
 
 **模板选择逻辑：**
 - 检查 `.knowledge-base/templates/<level>.md` 是否存在
@@ -169,8 +169,9 @@ description: Use when needing to understand project architecture, module interfa
 
 **调度索引 Agent：**
 
-- 提示词：`prompts/index-agent.md`
-- 输入：分层树 + 所有已生成的条目文件路径 + Git 信息
+通过 Task 工具派发 `kb-index-agent` 子 agent（subagent_type: `kb-index-agent`）。
+
+- 输入：项目根目录 + 分层树 + 所有已生成的条目文件路径 + Git 信息 + 增量更新标志
 - 输出：
   - `docs/kb/.manifest.yaml`
   - `skills/knowledge-base/SKILL.md`
