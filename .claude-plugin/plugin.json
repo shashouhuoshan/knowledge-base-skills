@@ -5,6 +5,10 @@
   "author": {
     "name": "Knowledge Base Plugin"
   },
+  "homepage": "https://github.com/shashouhuoshan/knowledge-base-skills",
+  "repository": "https://github.com/shashouhuoshan/knowledge-base-skills",
+  "license": "MIT",
+  "keywords": ["knowledge-base", "code-analysis", "documentation", "sdd"],
   "commands": [
     ".claude/commands/kb-init.md",
     ".claude/commands/kb-generate.md",
@@ -12,5 +16,12 @@
   ],
   "skills": [
     "skills/knowledge-base-generator/SKILL.md"
+  ],
+  "agents": [
+    "./agents/recognition-agent.md",
+    "./agents/system-agent.md",
+    "./agents/subsystem-agent.md",
+    "./agents/module-agent.md",
+    "./agents/index-agent.md"
   ]
 }

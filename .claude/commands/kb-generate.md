@@ -4,9 +4,10 @@
 
 ### 阶段 1：结构识别
 
-派一个 Subagent 扫描项目并输出分层建议树。
+派一个 **kb-recognition-agent** 子 agent（通过 Task 工具，subagent_type: `kb-recognition-agent`）扫描项目并输出分层建议树。
 
 向该 Subagent 提供：
+- 项目根目录路径
 - 项目目录树（排除 node_modules, .git, dist, build 等）
 - 依赖文件（package.json, go.mod, Cargo.toml 等）
 - 设计文档（按以下顺序搜索：docs/superpowers/specs/ → docs/superpowers/plans/ → docs/ → README.md → config 显式映射）
@@ -20,13 +21,13 @@ Subagent 输出分层建议树后，呈现给用户确认。分层规则：
 
 ### 阶段 2：并行生成
 
-用户确认后，并行派 Subagent 生成各层级条目。
+用户确认后，并行派子 agent 生成各层级条目（全部使用 Task 工具并行派发）：
 
-**系统级 Agent**：分析系统边界、技术栈、外部依赖、子系统列表。输出到 `docs/kb/system/<name>.md`。
+- **kb-system-agent**（1 个）：分析系统边界、技术栈、外部依赖、子系统列表。输出到 `docs/kb/system/<name>.md`。
+- **kb-subsystem-agent**（并行 N 个）：分析子系统内部结构、接口、依赖关系、模块列表。输出到 `docs/kb/subsystem/<name>.md`。
+- **kb-module-agent**（并行 M 个）：从源码提取函数签名、数据结构、依赖。这是最细粒度——签名必须从实际代码逐字复制，不编造。输出到 `docs/kb/module/<name>.md`。
 
-**子系统 Agent（并行 N 个）**：分析子系统内部结构、接口、依赖关系、模块列表。输出到 `docs/kb/subsystem/<name>.md`。
-
-**模块 Agent（并行 M 个）**：从源码提取函数签名、数据结构、依赖。这是最细粒度——签名必须从实际代码逐字复制，不编造。输出到 `docs/kb/module/<name>.md`。
+每个 agent 的 dispatch 包含：项目根目录、对应节点信息、模板路径、输出文件路径。
 
 模板优先级：`.knowledge-base/templates/<level>.md` > 内置默认模板（参考 /kb-init 中的模板定义）。
 
@@ -40,7 +41,7 @@ Subagent 输出分层建议树后，呈现给用户确认。分层规则：
 
 ### 阶段 3：索引汇总
 
-派一个 Subagent：
+派一个 **kb-index-agent** 子 agent（subagent_type: `kb-index-agent`）：
 - 生成 `docs/kb/.manifest.yaml`（记录 last_commit、每个条目的来源文件和 hash）
 - 更新 `skills/knowledge-base/SKILL.md`（三层索引，含相对路径链接）
 - 输出生成报告（各层级条目数、有/无设计文档统计）
@@ -49,7 +50,7 @@ Subagent 输出分层建议树后，呈现给用户确认。分层规则：
 
 1. Git 模式：`git diff --name-only <manifest.last_commit> HEAD` 检测变更
 2. 映射：单文件变更→对应模块，多文件→子系统+子模块，package.json→系统级
-3. 仅重生成受影响条目
-4. 更新 manifest 和索引
+3. 仅重生成受影响条目（调用对应 agent：kb-module-agent / kb-subsystem-agent / kb-system-agent）
+4. 调用 kb-index-agent 更新 manifest 和索引
 
 非 Git 项目降级为文件 Hash 对比。
