@@ -10,9 +10,9 @@
   "license": "MIT",
   "keywords": ["knowledge-base", "code-analysis", "documentation", "sdd"],
   "commands": [
-    ".claude/commands/kb-init.md",
-    ".claude/commands/kb-generate.md",
-    ".claude/commands/kb-status.md"
+    "commands/kb-init.md",
+    "commands/kb-generate.md",
+    "commands/kb-status.md"
   ],
   "skills": [
     "skills/knowledge-base-generator/SKILL.md"

@@ -177,7 +177,12 @@ output:
 ```
 .claude-plugin/
 ├── plugin.json                     # 插件清单（注册 commands/skills/agents）
-└── marketplace.json               # Marketplace 清单（用于分发）
+└── marketplace.json               # Marketplace 清单（source: "./"）
+
+commands/                          # 斜杠命令（根目录，符合插件规范）
+├── kb-init.md                     # /kb-init 命令
+├── kb-generate.md                 # /kb-generate 命令
+└── kb-status.md                   # /kb-status 命令
 
 agents/                            # 注册的子 agent（按需调用）
 ├── recognition-agent.md           # 结构识别 → 分层建议树
@@ -185,11 +190,6 @@ agents/                            # 注册的子 agent（按需调用）
 ├── subsystem-agent.md             # 子系统级条目生成
 ├── module-agent.md                # 模块级条目生成
 └── index-agent.md                 # 索引与清单汇总
-
-.claude/commands/
-├── kb-init.md                     # /kb-init 命令
-├── kb-generate.md                 # /kb-generate 命令
-└── kb-status.md                   # /kb-status 命令
 
 skills/knowledge-base-generator/
 ├── SKILL.md                       # 主编排 Skill（流程定义）
