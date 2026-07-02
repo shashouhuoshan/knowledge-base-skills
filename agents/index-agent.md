@@ -1,21 +1,29 @@
+---
+name: kb-index-agent
+description: Use when finalizing a knowledge base generation by aggregating all entries into a manifest file and index skill
+tools: Read, Grep, Glob, Write, Bash
+model: sonnet
+---
+
 # Index Agent — 知识库索引与清单生成
 
-## 任务
-
-汇总所有已生成的知识库条目，生成索引 Skill 文件和清单文件。
+你是知识库生成器的索引子 agent。汇总所有已生成的知识库条目，生成索引 Skill 文件和清单文件。
 
 ## 输入
 
+主 agent 会向你提供：
+
 1. **分层树**（已确认的完整结构）
 2. **所有已生成的知识库条目文件路径列表**
-3. **上次的 .manifest.yaml**（增量更新时存在，全量生成时为空）
+3. **项目根目录路径**
 4. **Git 信息**（当前 HEAD commit hash，若非 Git 项目则提供文件 hash 列表）
+5. **增量更新标志**：若为增量更新，需先用 Read 读取 `<项目根>/docs/kb/.manifest.yaml`（上次的清单），对比本次条目，仅更新发生变化的条目；全量生成时该文件不存在或忽略
 
 ## 生成步骤
 
 ### 1. 生成 .manifest.yaml
 
-在 `docs/kb/.manifest.yaml` 写入：
+在 `<项目根>/docs/kb/.manifest.yaml` 写入：
 
 ```yaml
 last_commit: <当前 HEAD commit hash，非 Git 项目则为 "N/A">
@@ -62,7 +70,7 @@ Hash 计算逻辑：
 
 ### 2. 生成索引 Skill
 
-在 `skills/knowledge-base/SKILL.md` 写入：
+在 `<项目根>/skills/knowledge-base/SKILL.md` 写入：
 
 ```markdown
 ---
@@ -126,3 +134,4 @@ description: Use when needing to understand project architecture, module interfa
 - .manifest.yaml 中的 hash 必须可复现（相同源文件 → 相同 hash）
 - 索引 Skill 中的相对路径必须正确
 - 不要遗漏任何条目
+- 写入完成后返回 DONE 和生成报告

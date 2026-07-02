@@ -426,9 +426,12 @@ finishing 自动触发更新       ← 知识库持续保鲜
 ### 11.1 一期交付物
 
 1. **`knowledge-base-generator` Skill** — 核心 Skill 文件（`SKILL.md`），包含完整流程定义
-2. **默认模板** — 系统/子系统/模块三级 Markdown 模板
-3. **索引 Skill 生成器** — 自动生成 `skills/knowledge-base/SKILL.md`
-4. **配置系统** — `.knowledge-base/config.yaml` 默认配置和 Schema
+2. **注册子 Agent** — `agents/` 下 5 个 agent（recognition/system/subsystem/module/index），通过 `plugin.json` 的 `agents` 数组注册，由 Task 工具按需调用
+3. **斜杠命令** — `commands/`（插件根目录）下 3 个命令（kb-init/kb-generate/kb-status）
+4. **默认模板** — 系统/子系统/模块三级 Markdown 模板
+5. **索引 Skill 生成器** — 自动生成 `skills/knowledge-base/SKILL.md`
+6. **配置系统** — `.knowledge-base/config.yaml` 默认配置和 Schema
+7. **Plugin 分发清单** — `.claude-plugin/plugin.json` + `marketplace.json`，支持通过 Claude Plugin Marketplace 安装
 
 ### 11.2 二期（后续迭代）
 

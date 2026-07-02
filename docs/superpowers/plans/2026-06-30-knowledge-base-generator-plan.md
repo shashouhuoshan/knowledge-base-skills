@@ -2,11 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 创建 `knowledge-base-generator` Superpowers Skill Plugin，实现 `/kb:init`、`/kb:generate`、`/kb:status` 三个命令，通过 Subagent 并行编排为项目生成三层代码知识库。
+> **实现变更记录（2026-07-01）：** 本计划原将子 Agent 提示词放在 `skills/knowledge-base-generator/prompts/`。实际实现时改为在仓库根目录 `agents/` 下注册为标准 Claude Code Agent（含 frontmatter：name/description/tools/model），并通过 `plugin.json` 的 `agents` 数组注册，由 Task 工具的 `subagent_type` 按需调用。`prompts/` 目录已删除，`agents/` 是唯一来源。下文 Task 3 中 `prompts/xxx.md` 的内容已等价迁移到 `agents/xxx-agent.md`（含 frontmatter 增量）。
 
-**Architecture:** 纯 Skill 实现，无外部 CLI 依赖。一个主编排 Skill（SKILL.md）定义流程，5 个 Subagent 提示词模板（prompts/）定义各 Agent 行为，3 个默认模板（templates/）定义知识库条目格式，1 个默认配置文件（config/）定义项目初始化内容。
+**Goal:** 创建 `knowledge-base-generator` Superpowers Skill Plugin，实现 `/kb-init`、`/kb-generate`、`/kb-status` 三个命令，通过 Subagent 并行编排为项目生成三层代码知识库。
 
-**Tech Stack:** Markdown（Skill 文件 + 模板），YAML（配置），无编程语言依赖。
+**Architecture:** 纯 Skill 实现，无外部 CLI 依赖。一个主编排 Skill（SKILL.md）定义流程，5 个注册子 Agent（`agents/*.md`，通过 `plugin.json` 注册并由 Task 工具按需调用）执行各层级生成，3 个默认模板（templates/）定义知识库条目格式，1 个默认配置文件（config/）定义项目初始化内容。
+
+**Tech Stack:** Markdown（Skill 文件 + 模板 + Agent 定义），YAML（配置 + frontmatter），无编程语言依赖。
 
 ## Global Constraints
 

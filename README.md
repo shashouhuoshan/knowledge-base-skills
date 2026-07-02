@@ -12,32 +12,47 @@
 - **SDD 深度集成**：知识库作为 brainstorming → writing-plans → subagent-driven-dev → finishing 全流程的共享上下文
 - **零依赖**：纯 Markdown + YAML，无需编程语言运行时
 
-## 快速开始
+## 安装
 
-### 在线安装（需要合并到 main 后可用）
+### 通过 Plugin Marketplace 安装（推荐）
 
 ```bash
-claude plugins install knowledge-base-generator@github:shashouhuoshan/knowledge-base-skills
+# 1. 添加插件市场
+/plugin marketplace add shashouhuoshan/knowledge-base-skills
+
+# 2. 安装插件
+/plugin install knowledge-base-generator@knowledge-base-skills
 ```
 
-或在 `~/.claude/settings.json` 的 `enabledPlugins` 中添加：
+安装后运行 `/reload-plugins`，输入 `/kb-` 即可看到三个命令。
+
+### 通过 settings.json 安装
+
+在 `~/.claude/settings.json` 中配置：
 
 ```json
 {
+  "extraKnownMarketplaces": {
+    "knowledge-base-skills": {
+      "source": {
+        "source": "github",
+        "repo": "shashouhuoshan/knowledge-base-skills"
+      }
+    }
+  },
   "enabledPlugins": {
-    "knowledge-base-generator@github:shashouhuoshan/knowledge-base-skills": true
+    "knowledge-base-generator@knowledge-base-skills": true
   }
 }
 ```
 
-安装后运行 `/reload-plugins`，输入 `/kb-` 即可看到三个命令。
+配置后运行 `/reload-plugins` 即可。
 
 ### 离线安装
 
 将仓库的 `.claude/commands/` 和 `skills/` 复制到 `~/.claude/` 下：
 
 ```bash
-# 从已 clone 的仓库复制
 cp -r <repo>/.claude/commands/kb-*.md ~/.claude/commands/
 cp -r <repo>/skills/knowledge-base-generator ~/.claude/skills/
 ```
@@ -160,27 +175,43 @@ output:
 ## 文件结构
 
 ```
-knowledge-base-generator/
-├── SKILL.md                        # 主编排 Skill（命令流程定义）
-├── config/
-│   └── default-config.yaml         # 默认配置模板
-├── templates/                      # 默认知识库条目模板
-│   ├── system.md
-│   ├── subsystem.md
-│   └── module.md
-├── prompts/                        # Subagent 提示词
-│   ├── recognition-agent.md        # 结构识别
-│   ├── system-agent.md             # 系统级生成
-│   ├── subsystem-agent.md          # 子系统级生成
-│   ├── module-agent.md             # 模块级生成
-│   └── index-agent.md              # 索引汇总
 .claude-plugin/
-└── plugin.json                     # 插件清单
-.claude/commands/
-├── kb-init.md                      # /kb-init 命令
-├── kb-generate.md                  # /kb-generate 命令
-└── kb-status.md                    # /kb-status 命令
+├── plugin.json                     # 插件清单（注册 commands/skills/agents）
+└── marketplace.json               # Marketplace 清单（source: "./"）
+
+commands/                          # 斜杠命令（根目录，符合插件规范）
+├── kb-init.md                     # /kb-init 命令
+├── kb-generate.md                 # /kb-generate 命令
+└── kb-status.md                   # /kb-status 命令
+
+agents/                            # 注册的子 agent（按需调用）
+├── recognition-agent.md           # 结构识别 → 分层建议树
+├── system-agent.md                # 系统级条目生成
+├── subsystem-agent.md             # 子系统级条目生成
+├── module-agent.md                # 模块级条目生成
+└── index-agent.md                 # 索引与清单汇总
+
+skills/knowledge-base-generator/
+├── SKILL.md                       # 主编排 Skill（流程定义）
+├── config/
+│   └── default-config.yaml        # 默认配置模板
+└── templates/                     # 默认知识库条目模板
+    ├── system.md
+    ├── subsystem.md
+    └── module.md
 ```
+
+### Subagent 架构
+
+`/kb-generate` 通过 Task 工具按需调用注册的 5 个子 agent：
+
+| Agent | 触发时机 | 工具权限 |
+|-------|---------|---------|
+| `kb-recognition-agent` | 阶段 1：扫描项目结构 | Read, Grep, Glob, Bash |
+| `kb-system-agent` | 阶段 2：生成系统级条目（×1） | Read, Grep, Glob, Write |
+| `kb-subsystem-agent` | 阶段 2：生成子系统条目（并行 ×N） | Read, Grep, Glob, Write |
+| `kb-module-agent` | 阶段 2：生成模块条目（并行 ×M） | Read, Grep, Glob, Write |
+| `kb-index-agent` | 阶段 3：汇总索引与清单 | Read, Grep, Glob, Write, Bash |
 
 ## 质量评估
 
