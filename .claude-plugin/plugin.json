@@ -9,14 +9,6 @@
   "repository": "https://github.com/shashouhuoshan/knowledge-base-skills",
   "license": "MIT",
   "keywords": ["knowledge-base", "code-analysis", "documentation", "sdd"],
-  "commands": [
-    "commands/kb-init.md",
-    "commands/kb-generate.md",
-    "commands/kb-status.md"
-  ],
-  "skills": [
-    "skills/knowledge-base-generator/SKILL.md"
-  ],
   "agents": [
     "./agents/recognition-agent.md",
     "./agents/system-agent.md",
